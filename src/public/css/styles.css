@@ -1,0 +1,105 @@
+* {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #fcf0f2;
+    color: #5b1924;
+}
+
+button {
+    border: #5b1924 solid 2px;
+    border-radius: 25% 15%;
+    cursor: pointer;
+}
+
+.feed-top {
+    display: grid;
+    grid-template-columns: 1fr 4fr 1fr;
+    grid-gap: 10px;
+}
+
+.feed-container {
+    display: grid;
+    grid-template-columns: 1fr 4fr 1fr;
+    grid-gap: 10px;
+}
+
+.post {
+    border-radius: 7px;
+    padding: 10px;
+    transition: all 0.2s;
+}
+
+
+.post:hover {
+    box-shadow: #5a373d90 0px 3px 8px;
+    transition: all 0.2s;
+}
+
+.react-button {
+    background-color: #fcf0f2;
+    transition: all 0.2s;
+}
+
+.react-button.like:hover {
+    /* transition: all 0.2s; */
+    background-color: #84ce9d;
+}
+
+.react-button.dislike:hover {
+    background-color: #5a373d;
+}
+
+.liked-button {
+    background-color: #33cc66;
+    border-color: #33cc66;
+}
+
+.disliked-button {
+    background-color: #5b1924;
+    color: #fcf0f2;
+}
+
+.react-img {
+    width: 20px;
+    height: 20px;
+    image-rendering: optimizeQuality;
+}
+
+#submitPost {
+    vertical-align: top;
+    background-color: #5b1924;
+    color: #fcf0f2;
+    border-color: #5b1924;
+    border-radius: 25% 15%;
+    height: 40px;
+    transition: all 0.2s;
+}
+
+#submitPost:hover {
+    background-color: #ff6699;
+    border-color: #ff6699;
+    color: #5b1924;
+}
+
+#inputContent {
+    width: max-content;
+    height: 35px;
+    border-radius: 5px;
+    box-sizing: content-box;
+    resize: none;
+    transition: all 0.5s;
+}
+
+#inputContent:focus {
+    border: 3px solid;
+    border-color: #5b1924;
+}
+
+#mainFeed {
+    border: #5a373d90 2px solid;
+    border-radius: 15px;
+    padding: 5px 10px
+}

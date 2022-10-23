@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+  <h1>Hi!</h1>
+  <form action="/api/auth/signup" method="post">
+    <input type="text" name="username" id="inputUsername" placeholder="Username">
+    <input type="text" name="email" id="inputEmail" placeholder="Email">
+    <input type="password" name="password" id="inputPassword" placeholder="Password">
+    <input type="submit" value="Sign Up" />
+  </form>
+  <p>Already have an account? <a href="/signin">Sign in here!</a></p>
+
+</body>
+
+</html>
