@@ -1,0 +1,24 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.postUnreactPost = exports.postLikePost = exports.postDislikePost = exports.getAllFriendsPosts = exports.getUserPosts = exports.getLastPublishedPost = exports.postPost = exports.postChangeUserAvatar = exports.getUserProfile = exports.postAddFriend = exports.getUsersNotFollowed = exports.getSignUp = exports.getSignIn = exports.getMain = exports.postSignUp = exports.postSignIn = exports.postLogOut = void 0;
+var auth_controller_1 = require("./auth.controller");
+Object.defineProperty(exports, "postLogOut", { enumerable: true, get: function () { return auth_controller_1.postLogOut; } });
+Object.defineProperty(exports, "postSignIn", { enumerable: true, get: function () { return auth_controller_1.postSignIn; } });
+Object.defineProperty(exports, "postSignUp", { enumerable: true, get: function () { return auth_controller_1.postSignUp; } });
+var user_controller_1 = require("./user.controller");
+Object.defineProperty(exports, "getMain", { enumerable: true, get: function () { return user_controller_1.getMain; } });
+Object.defineProperty(exports, "getSignIn", { enumerable: true, get: function () { return user_controller_1.getSignIn; } });
+Object.defineProperty(exports, "getSignUp", { enumerable: true, get: function () { return user_controller_1.getSignUp; } });
+Object.defineProperty(exports, "getUsersNotFollowed", { enumerable: true, get: function () { return user_controller_1.getUsersNotFollowed; } });
+Object.defineProperty(exports, "postAddFriend", { enumerable: true, get: function () { return user_controller_1.postAddFriend; } });
+Object.defineProperty(exports, "getUserProfile", { enumerable: true, get: function () { return user_controller_1.getUserProfile; } });
+Object.defineProperty(exports, "postChangeUserAvatar", { enumerable: true, get: function () { return user_controller_1.postChangeUserAvatar; } });
+var post_controller_1 = require("./post.controller");
+Object.defineProperty(exports, "postPost", { enumerable: true, get: function () { return post_controller_1.postPost; } });
+Object.defineProperty(exports, "getLastPublishedPost", { enumerable: true, get: function () { return post_controller_1.getLastPublishedPost; } });
+Object.defineProperty(exports, "getUserPosts", { enumerable: true, get: function () { return post_controller_1.getUserPosts; } });
+Object.defineProperty(exports, "getAllFriendsPosts", { enumerable: true, get: function () { return post_controller_1.getAllFriendsPosts; } });
+Object.defineProperty(exports, "postDislikePost", { enumerable: true, get: function () { return post_controller_1.postDislikePost; } });
+Object.defineProperty(exports, "postLikePost", { enumerable: true, get: function () { return post_controller_1.postLikePost; } });
+Object.defineProperty(exports, "postUnreactPost", { enumerable: true, get: function () { return post_controller_1.postUnreactPost; } });
+//# sourceMappingURL=index.js.map

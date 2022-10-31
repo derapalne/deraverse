@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Feed</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/cookieFunctions.js"></script>
+</head>
+
+<body>
+  <div class="page-container">
+    <div class="feed-top">
+      <div>
+        <a href="/main">
+          <h2 id="mainTitle">DERAVERSE</h2>
+        </a>
+      </div>
+      <div class="profile-top">
+        <h2>Welcome to <strong id="profileUserName"><%= profile.username %></strong>'s profile</h2>
+        <div>
+          <div class="profile-picture-container">
+            <img id="profilePicture" src=<%= profile.avatar %>>
+            <label for="btnEditPfp" id="btnOpenPfpEditor">Edit Profile Picture</label>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h2>Hi, <%= user.username %>!</h2>
+        <form action="/api/auth/logout" method="POST">
+          <input type="submit" id="logoutButton" value="Logout" />
+        </form>
+      </div>
+    </div>
+    <!-- MODAL -->
+    <input type="checkbox" id="btnEditPfp" />
+    <div class="container-modal-editpfp">
+      <div class="content-modal-editpfp">
+        <div>
+          <h3>Choose your new profile picture</h3>
+          <label for="btnEditPfp" id="btnOpenPfpEditor">Close</label>
+        </div>
+        <div id="profilePictureChooser">
+        </div>
+        <button id="saveChosenPfp">Save</button>
+      </div>
+      <label for="btnEditPfp" class="close-modal-editpfp"></label>
+    </div>
+    <!-- FEED -->
+    <div class="feed-container">
+      <div></div>
+      <div>
+        <p></p>
+      </div>
+      <div></div>
+    </div>
+    <div class="feed-container">
+      <div class="feed-child">
+      </div>
+      <div class="feed-child" id="mainFeed">
+        <div>
+          <p>There are no more posts to see.</p>
+        </div>
+      </div>
+      <div class="feed-child" id="friendSuggestions">
+        <h2>Friend Suggestions</h2>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/utilityFunctions.js"></script>
+  <script src="/js/postFunctions.js"></script>
+  <script src="/js/userProfile.js"></script>
+  <script src="/js/friendFunctions.js"></script>
+  <script src="/js/ownProfile.js"></script>
+
+</body>
+
+</html>
