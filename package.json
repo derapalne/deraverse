@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "rimraf ./dist/",
     "copy-files": "copyfiles -u 1 src/views/*.ejs src/views/partials/*.ejs src/public/**/*.* dist/",
-    "build": "npm run clean && tsc && npm run copy-files",
+    "dev:build": "npm run clean && tsc && npm run copy-files",
     "dev": "nodemon ./dist/index.js",
     "start": "node ./dist/index.js"
   },
