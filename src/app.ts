@@ -3,6 +3,7 @@ import cors from "cors";
 import express, { Application } from "express";
 import morgan from "morgan";
 import path from "node:path";
+import config from "./utils/config.js";
 
 const app: Application = express();
 
@@ -10,7 +11,7 @@ import { authRouter, postRouter } from "./routes";
 import { userRouter } from "./routes";
 
 // settings
-app.set("port", process.env.PORT || 4000);
+app.set("port", config.PORT || 4000);
 // mover a utils
 const corsOptions = {
     origin: true,

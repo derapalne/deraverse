@@ -11,6 +11,7 @@ const separateAndGetCookie = (cookiesFromHeader: string, cookieToFind: string): 
 };
 
 const isAuth = (req: Request, res: Response, next: NextFunction) => {
+    console.log("Autenticando...")
     const token = req.cookies["auth-token"] || req.headers["auth-token"];
     if (token) {
         const authorized = jwt.verify(token, process.env.TOKEN_SECRET || "azurillTest");

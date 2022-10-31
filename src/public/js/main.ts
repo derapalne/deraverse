@@ -28,7 +28,8 @@ const addFriend = (userEmail: string, friendEmail: string) => {
                 button.setAttribute("disabled", "true");
                 button.innerText = "Friend Followed";
             }
-        });
+        })
+        .catch((err) => console.log(err));
 };
 
 mainTitle.addEventListener("click", (ev: MouseEvent) => {
@@ -65,38 +66,39 @@ submitPostButton.addEventListener("click", (ev: MouseEvent) => {
                 "Access-Control-Allow-Credentials": "true",
                 "auth-token": token,
             },
-        }).then((res) => {
-            const post: HTMLDivElement = document.createElement("div");
-            post.classList.add("post");
-            post.setAttribute("id", "temporaryPostLoading");
-            const postingText: HTMLParagraphElement = document.createElement("p");
-            if (res.statusText !== "Created") {
-                postingText.innerText = "There has been an error, try again";
+        })
+            .then((res) => {
+                const post: HTMLDivElement = document.createElement("div");
+                post.classList.add("post");
+                post.setAttribute("id", "temporaryPostLoading");
+                const postingText: HTMLParagraphElement = document.createElement("p");
+                if (res.statusText !== "Created") {
+                    postingText.innerText = "There has been an error, try again";
+                    post.appendChild(postingText);
+                    mainFeed.insertBefore(post, mainFeed.firstChild);
+                    return;
+                }
+                postingText.innerText = "Your post is being published";
                 post.appendChild(postingText);
                 mainFeed.insertBefore(post, mainFeed.firstChild);
-                return;
-            }
-            postingText.innerText = "Your post is being published";
-            post.appendChild(postingText);
-            mainFeed.insertBefore(post, mainFeed.firstChild);
-            fetch(`${apiPostUrl}/lastpublishedpost?user=${author}`, {
-                method: "GET",
-                headers: {
-                    "auth-token": token,
-                },
-            })
-                .then((res) => {
-                    return res.json();
+                fetch(`${apiPostUrl}/lastpublishedpost?user=${author}`, {
+                    method: "GET",
+                    headers: {
+                        "auth-token": token,
+                    },
                 })
-                .then((res) => {
-                    post.setAttribute("id", `${res.author}-${res.timestamp}`);
-                    post.innerHTML = formPost(res);
-                });
-        });
+                    .then((res) => {
+                        return res.json();
+                    })
+                    .then((res) => {
+                        post.setAttribute("id", `${res.author}-${res.timestamp}`);
+                        post.innerHTML = formPost(res);
+                    })
+                    .catch((err) => console.log(err));
+            })
+            .catch((err) => console.log(err));
     }
 });
-
-
 
 getAllFriendsPosts(userInfo.email);
 getFriendSuggestions(userInfo.email);
