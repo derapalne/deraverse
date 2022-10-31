@@ -1,6 +1,6 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import express, { Application } from "express";
+import express, { Application, Request, Response } from "express";
 import morgan from "morgan";
 import path from "node:path";
 import config from "./utils/config.js";
@@ -45,5 +45,9 @@ app.set("view engine", "ejs");
 app.use("/api/auth", authRouter);
 app.use("/", userRouter);
 app.use("/", postRouter);
+
+app.get('*', (req: Request, res: Response) => {
+    res.redirect('/main');
+});
 
 export default app;
