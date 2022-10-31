@@ -5,7 +5,7 @@ const profilePictureChooser = document.getElementById("profilePictureChooser")! 
 const saveChosenPfp = document.getElementById("saveChosenPfp")! as HTMLButtonElement;
 
 const avatarUrls = [
-    "/img/avatar/battery-avatar.png",
+    "public/img/avatar/battery-avatar.png",
     "/img/avatar/boot-avatar.png",
     "/img/avatar/default-avatar.png",
     "/img/avatar/flower-avatar.png",
