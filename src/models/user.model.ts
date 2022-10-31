@@ -21,7 +21,15 @@ const UserSchema = new Schema({
         required: true,
     },
     friendlist: {
-        type: Array,
+        type: [String],
+        required: true
+    },
+    followers: {
+        type: [String],
+        required: true
+    },
+    avatar: {
+        type: String,
         required: true
     }
 });

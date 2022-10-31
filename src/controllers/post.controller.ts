@@ -23,21 +23,29 @@ export const postPost = async (req: Request, res: Response) => {
 };
 
 export const getLastPublishedPost = async (req: Request, res: Response) => {
-    const author = req.query.user;
-    if (!author) return res.status(404).json("There has been an error in the request");
-    const lastPost = await PostModel.find({ author: author }).sort({ timestamp: -1 }).limit(1);
+    const authorEmail = req.query.user;
+    if (!authorEmail) return res.status(404).json("There has been an error in the request");
+    const lastPost = await PostModel.find({ author: authorEmail }).sort({ timestamp: -1 }).limit(1);
+    const author = await UserModel.findOne({email: authorEmail}, {avatar: 1});
+    const authorAvatar = author ? author.avatar : "/img/default-avatar.png";
     lastPost[0].likes.push("0");
     lastPost[0].dislikes.push("0");
-    res.status(200).json({ post: lastPost[0], status: 0 });
+    res.status(200).json({ post: lastPost[0], status: 0, authorAvatar: authorAvatar });
 };
 
 const getPostsFromFriendlist = async (
     friendlist: string[],
     userEmail: string
-): Promise<{ post: IPost; status: number }[]> => {
-    const postsToShow: { post: IPost; status: number }[] = [];
+): Promise<{ post: IPost; status: number, authorAvatar: string }[]> => {
+    const postsToShow: { post: IPost; status: number, authorAvatar: string }[] = [];
     for (let f = 0; f < friendlist.length; f++) {
         const friendPosts = await PostModel.find({ author: friendlist[f] }, { __v: 0 });
+        const friendAvatar = await UserModel.findOne(
+            { email: friendlist[f] },
+            { avatar: 1, _id: 0 }
+        );
+        let authorAvatar = "/img/default-avatar.png";
+        if(friendAvatar) authorAvatar = friendAvatar.avatar;
         for (let p = 0; p < friendPosts.length; p++) {
             let status = 0;
             const liked = friendPosts[p].likes.find((user) => user == userEmail);
@@ -47,7 +55,7 @@ const getPostsFromFriendlist = async (
             } else if (disliked) {
                 status = 2;
             }
-            postsToShow.push({ post: friendPosts[p], status: status });
+            postsToShow.push({ post: friendPosts[p], status: status, authorAvatar: authorAvatar });
         }
     }
     return postsToShow;
@@ -56,7 +64,10 @@ const getPostsFromFriendlist = async (
 export const getAllFriendsPosts = async (req: Request, res: Response) => {
     const userEmail = req.query.user?.toString();
     if (!userEmail) return res.status(400).json("There has been an error in the request");
-    const usersFriendlist = await UserModel.findOne({ email: userEmail }, { friendlist: 1, _id: 0 });
+    const usersFriendlist = await UserModel.findOne(
+        { email: userEmail },
+        { friendlist: 1, _id: 0 }
+    );
     if (!usersFriendlist) return res.status(400).json("There has been an error in the request");
     const postsToShow: { post: IPost; status: number }[] = await getPostsFromFriendlist(
         usersFriendlist.friendlist,
@@ -70,11 +81,12 @@ export const getAllFriendsPosts = async (req: Request, res: Response) => {
 };
 
 export const getUserPosts = async (req: Request, res: Response) => {
-    const userEmail = req.query.userEmal?.toString();;
-    if(!userEmail) return res.status(401).json("There has been an error in the request");
-    const posts = await PostModel.find({author: userEmail}, {__v: 0});
+    const profileEmail = req.query.profileEmail?.toString();
+    const userEmail = req.query.userEmail?.toString();
+    if (!profileEmail || !userEmail) return res.status(401).json("There has been an error in the request");
+    const posts = await getPostsFromFriendlist([profileEmail], userEmail);
     res.status(200).json(posts);
-}
+};
 
 export const postLikePost = async (req: Request, res: Response) => {
     try {
@@ -87,7 +99,6 @@ export const postLikePost = async (req: Request, res: Response) => {
         if (Number(likes) < 1)
             await PostModel.findOneAndUpdate({ _id: postId }, { likes: [likerEmail] });
         else {
-            console.log(likes);
             await PostModel.findOneAndUpdate({ _id: postId }, { $addToSet: { likes: likerEmail } });
         }
         if (Number(dislikes) >= 1)
@@ -140,7 +151,10 @@ export const postUnreactPost = async (req: Request, res: Response) => {
         if (reaction === "like")
             await PostModel.findOneAndUpdate({ _id: postId }, { $pull: { likes: unreacterEmail } });
         if (reaction === "dislike")
-            await PostModel.findOneAndUpdate({ _id: postId }, { $pull: { dislikes: unreacterEmail } });
+            await PostModel.findOneAndUpdate(
+                { _id: postId },
+                { $pull: { dislikes: unreacterEmail } }
+            );
         const post = await PostModel.findOne({ _id: postId }, { __v: 0 });
         if (!post) return res.status(400).json("There has been an error in the request");
         const totalLikes = post.likes.length;

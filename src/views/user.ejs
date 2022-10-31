@@ -13,10 +13,17 @@
   <div class="page-container">
     <div class="feed-top">
       <div>
-        <h2 id="mainTitle">DERAVERSE</h2>
+        <a href="/main">
+            <h2 id="mainTitle">DERAVERSE</h2>
+        </a>
       </div>
-      <div>
-
+      <div class="profile-top">
+        <h2>Welcome to <strong id="profileUserName"><%= profile.username %></strong>'s profile</h2>
+        <div>
+          <div class="profile-picture-container">
+            <img id="profilePicture" src=<%= profile.avatar %> >
+          </div>
+        </div>
       </div>
       <div>
         <h2>Hi, <%= user.username %>!</h2>
@@ -28,11 +35,9 @@
     </div>
     <div class="feed-container">
       <div></div>
-      <div>        <form>
-        <textarea rows="3" cols="50" name="content" id="inputContent" placeholder="Write a post..."></textarea>
-        <input type="hidden" name="author" id="inputAuthor" value=<%= user.email %> />
-        <input type="submit" id="submitPost" value="Post" />
-      </form></div>
+      <div>
+        <p></p>
+      </div>
       <div></div>
     </div>
     <div class="feed-container">
@@ -53,7 +58,7 @@
   <script src="/js/utilityFunctions.js"></script>
   <script src="/js/postFunctions.js"></script>
   <script src="/js/friendFunctions.js"></script>
-  <script src="/js/main.js"></script>
+  <script src="/js/userProfile.js"></script>
 
 </body>
 

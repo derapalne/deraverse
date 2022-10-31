@@ -1,17 +1,73 @@
 * {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    box-sizing: border-box;
+    box-sizing: content-box;
+}
+
+a:any-link {
+    color: unset;
+    text-decoration: none;
 }
 
 body {
-    background-color: #fcf0f2;
-    color: #5b1924;
+    --main-bg-color: #faf0fc;
+    --main-color: #5b1924;
+    background-color: var(--main-bg-color);
+    color: var(--main-color);
 }
 
 button {
-    border: #5b1924 solid 2px;
+    border: var(--main-color) solid 2px;
     border-radius: 25% 15%;
     cursor: pointer;
+}
+
+pre {
+    white-space: pre-wrap;
+}
+
+.avatar-selection-image {
+    margin: 5px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.avatar-selection-image.selected {
+    border: 2px solid;
+    border-radius: 7px;
+    border-color: var(--main-color);
+}
+
+.container-modal-editpfp {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(128, 128, 128, 0.3);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    transition: 300ms;
+}
+
+#btnEditPfp:checked ~ .container-modal-editpfp {
+    display: flex;
+}
+
+.content-modal-editpfp {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    background-color: var(--main-bg-color);
+}
+
+.close-modal-editpfp {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: 0; left: 0;
+    z-index: -1;
 }
 
 .feed-top {
@@ -26,25 +82,61 @@ button {
     grid-gap: 10px;
 }
 
+.middle-align {
+    margin: auto 0%;
+}
+
+.page-container {
+    max-width: 80%;
+    margin: auto;
+    background-color: #ffffff90;
+    border-radius: 15px;
+    box-shadow: #ffffff90 0pc 2px 10px;
+    padding: 20px;
+}
+
 .post {
     border-radius: 7px;
     padding: 10px;
     transition: all 0.2s;
+    max-width: 540px;
+    margin: auto;
 }
 
-
 .post:hover {
-    box-shadow: #5a373d90 0px 3px 8px;
+    box-shadow: #5a373d10 0px 2px 7px;
     transition: all 0.2s;
 }
 
+.post-date {
+    color: var(--main-color);
+    opacity: 0.7;
+    font-weight: 200;
+}
+
+.post-profile-info {
+    display: flex;
+}
+
+.profile-picture {
+    max-width: 25px;
+    margin-right: 5px;
+}
+
+.profile-picture-container {
+    justify-self: center;
+}
+
+.profile-top {
+    text-align: center;
+}
+
 .react-button {
-    background-color: #fcf0f2;
+    background-color: var(--main-bg-color);
     transition: all 0.2s;
 }
 
 .react-button.like:hover {
-    /* transition: all 0.2s; */
     background-color: #84ce9d;
 }
 
@@ -59,7 +151,7 @@ button {
 
 .disliked-button {
     background-color: #5b1924;
-    color: #fcf0f2;
+    color: var(--main-bg-color);
 }
 
 .react-img {
@@ -71,10 +163,10 @@ button {
 #submitPost {
     vertical-align: top;
     background-color: #5b1924;
-    color: #fcf0f2;
+    color: var(--main-bg-color);
     border-color: #5b1924;
     border-radius: 25% 15%;
-    height: 40px;
+    height: 35px;
     transition: all 0.2s;
 }
 
@@ -88,7 +180,6 @@ button {
     width: max-content;
     height: 35px;
     border-radius: 5px;
-    box-sizing: content-box;
     resize: none;
     transition: all 0.5s;
 }
@@ -98,8 +189,31 @@ button {
     border-color: #5b1924;
 }
 
+#btnOpenPfpEditor {
+    cursor: pointer;
+    border: 2px solid;
+    border-color: var(--main-color);
+    padding: 0px 10px;
+    border-radius: 10px;
+}
+
+#btnEditPfp {
+    display: none;
+}
+
 #mainFeed {
-    border: #5a373d90 2px solid;
+    border: #5a373d10 2px solid;
     border-radius: 15px;
-    padding: 5px 10px
+    padding: 5px 10px;
+}
+
+#mainTitle {
+    cursor: pointer;
+}
+
+#editProfilePicture:hover {
+    position: relative;
+    top: 0;
+    left: 0;
+    cursor: pointer;
 }

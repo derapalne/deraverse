@@ -11,6 +11,8 @@ export const postSignUp = async (req: Request, res: Response) => {
         email: req.body.email,
         password: req.body.password,
         friendlist: [req.body.email],
+        followers: [],
+        avatar: "/img/avatar/default-avatar.png",
     });
     user.password = await user.encryptPassword(user.password);
     // Guardando usuario

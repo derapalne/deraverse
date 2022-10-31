@@ -13,31 +13,50 @@
   <div class="page-container">
     <div class="feed-top">
       <div>
-        <h2 id="mainTitle">DERAVERSE</h2>
+        <a href="/main">
+          <h2 id="mainTitle">DERAVERSE</h2>
+        </a>
       </div>
-      <div>
-
+      <div class="profile-top">
+        <h2>Welcome to <strong id="profileUserName"><%= profile.username %></strong>'s profile</h2>
+        <div>
+          <div class="profile-picture-container">
+            <img id="profilePicture" src=<%= profile.avatar %>>
+            <label for="btnEditPfp" id="btnOpenPfpEditor">Edit Profile Picture</label>
+          </div>
+        </div>
       </div>
       <div>
         <h2>Hi, <%= user.username %>!</h2>
         <form action="/api/auth/logout" method="POST">
           <input type="submit" id="logoutButton" value="Logout" />
         </form>
-        <button><a href="/profiles/<%= user.email %> ">Go to profile</a></button>
       </div>
     </div>
+    <!-- MODAL -->
+    <input type="checkbox" id="btnEditPfp" />
+    <div class="container-modal-editpfp">
+      <div class="content-modal-editpfp">
+        <div>
+          <h3>Choose your new profile picture</h3>
+          <label for="btnEditPfp" id="btnOpenPfpEditor">Close</label>
+        </div>
+        <div id="profilePictureChooser">
+        </div>
+        <button id="saveChosenPfp">Save</button>
+      </div>
+      <label for="btnEditPfp" class="close-modal-editpfp"></label>
+    </div>
+    <!-- FEED -->
     <div class="feed-container">
       <div></div>
-      <div>        <form>
-        <textarea rows="3" cols="50" name="content" id="inputContent" placeholder="Write a post..."></textarea>
-        <input type="hidden" name="author" id="inputAuthor" value=<%= user.email %> />
-        <input type="submit" id="submitPost" value="Post" />
-      </form></div>
+      <div>
+        <p></p>
+      </div>
       <div></div>
     </div>
     <div class="feed-container">
       <div class="feed-child">
-
       </div>
       <div class="feed-child" id="mainFeed">
         <div>
@@ -52,8 +71,9 @@
 
   <script src="/js/utilityFunctions.js"></script>
   <script src="/js/postFunctions.js"></script>
+  <script src="/js/userProfile.js"></script>
   <script src="/js/friendFunctions.js"></script>
-  <script src="/js/main.js"></script>
+  <script src="/js/ownProfile.js"></script>
 
 </body>
 
