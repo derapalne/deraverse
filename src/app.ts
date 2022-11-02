@@ -7,7 +7,7 @@ import config from "./utils/config.js";
 
 const app: Application = express();
 
-import { authRouter, postRouter } from "./routes";
+import { authRouter, commentRouter, postRouter } from "./routes";
 import { userRouter } from "./routes";
 
 // settings
@@ -46,6 +46,8 @@ app.set("view engine", "ejs");
 app.use("/api/auth", authRouter);
 app.use("/", userRouter);
 app.use("/", postRouter);
+app.use("/", commentRouter);
+
 
 app.get('*', (req: Request, res: Response) => {
     res.redirect('/main');

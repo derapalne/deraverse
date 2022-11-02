@@ -37,6 +37,17 @@ pre {
     border-color: var(--main-color);
 }
 
+.comment {
+    width: 70%;
+    margin-left: 28%;
+}
+
+.comment-box {
+    display: flex;
+    justify-content: end;
+    max-height: 40px;
+}
+
 .container-modal-editpfp {
     width: 100%;
     height: 100%;
@@ -80,6 +91,16 @@ pre {
     display: grid;
     grid-template-columns: 1fr 4fr 1fr;
     grid-gap: 10px;
+}
+
+.input-comment {
+    background-color: var(--main-bg-color);
+    border-radius: 5px;
+    resize: none;
+}
+
+.input-comment:focus {
+    background-color: #fff;
 }
 
 .middle-align {
@@ -131,36 +152,65 @@ pre {
     text-align: center;
 }
 
-.react-button {
+.react-Post-button {
     background-color: var(--main-bg-color);
     transition: all 0.2s;
 }
 
-.react-button.like:hover {
+.react-Post-button.like:hover {
     background-color: #84ce9d;
 }
 
-.react-button.dislike:hover {
+.react-Post-button.dislike:hover {
     background-color: #5a373d;
 }
 
-.liked-button {
+.liked-Post-button {
     background-color: #33cc66;
     border-color: #33cc66;
 }
 
-.disliked-button {
+.disliked-Post-button {
     background-color: #5b1924;
     color: var(--main-bg-color);
 }
 
-.react-img {
+.react-post-img {
     width: 20px;
     height: 20px;
     image-rendering: optimizeQuality;
 }
 
-#submitPost {
+.react-Comment-button {
+    background-color: var(--main-bg-color);
+    transition: all 0.2s;
+}
+
+.react-Comment-button.like:hover {
+    background-color: #84ce9d;
+}
+
+.react-Comment-button.dislike:hover {
+    background-color: #5a373d;
+}
+
+.liked-Comment-button {
+    background-color: #33cc66;
+    border-color: #33cc66;
+}
+
+.disliked-Comment-button {
+    background-color: #5b1924;
+    color: var(--main-bg-color);
+}
+
+.react-comment-img {
+    width: 12px;
+    height: 12px;
+    image-rendering: optimizeQuality;
+}
+
+.submitButton {
     vertical-align: top;
     background-color: #5b1924;
     color: var(--main-bg-color);
@@ -170,7 +220,7 @@ pre {
     transition: all 0.2s;
 }
 
-#submitPost:hover {
+.submitButton:hover {
     background-color: #ff6699;
     border-color: #ff6699;
     color: #5b1924;

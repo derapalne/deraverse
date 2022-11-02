@@ -1,9 +1,37 @@
+const addFriend = (userEmail: string, friendEmail: string) => {
+    const token = getStringFromCookies("auth-token");
+    fetch(`${apiProfilesUrl}/addfriend`, {
+        mode: "cors",
+        method: "POST",
+        body: JSON.stringify({
+            userEmail: userEmail,
+            friendEmail: friendEmail,
+        }),
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Credentials": "true",
+            "auth-token": token,
+        },
+    })
+        .then((res) => {
+            return res.json();
+        })
+        .then((res) => {
+            if (res.addedFriend === friendEmail) {
+                const button = document.getElementById("button-add-" + friendEmail)!;
+                button.setAttribute("disabled", "true");
+                button.innerText = "Friend Followed";
+            }
+        })
+        .catch((err) => console.log(err));
+};
+
 const formFriendSuggestions = (
     friends: { username: string; email: string }[],
     userEmail: string
 ) => {
     friends.forEach((friend) => {
-        console.log(friend);
         const friendDiv = document.createElement("div");
         const friendName = document.createElement("h4");
         friendName.innerText = friend.username;
@@ -18,28 +46,6 @@ const formFriendSuggestions = (
         friendDiv.appendChild(addButton);
         friendSuggestions.appendChild(friendDiv);
     });
-};
-
-const getAllFriendsPosts = (user: string) => {
-    const token = getStringFromCookies("auth-token");
-    fetch(`${apiPostUrl}/friendsposts?user=${user}`, {
-        method: "GET",
-        headers: {
-            "auth-token": token,
-        },
-    })
-        .then((res) => {
-            return res.json();
-        })
-        .then((res) => {
-            for (let p = 0; p < res.length; p++) {
-                const post: HTMLDivElement = document.createElement("div");
-                post.classList.add("post");
-                post.setAttribute("id", `${res[p].post.author}-${res[p].post.timestamp}`);
-                post.innerHTML = formPost(res[p]);
-                mainFeed.insertBefore(post, mainFeed.firstChild);
-            }
-        });
 };
 
 const getFriendSuggestions = (user: string) => {

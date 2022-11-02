@@ -3,35 +3,6 @@ const postAuthorInput = document.getElementById("inputAuthor")! as HTMLInputElem
 const submitPostButton = document.getElementById("submitPost")! as HTMLInputElement;
 const friendSuggestions = document.getElementById("friendSuggestions")! as HTMLDivElement;
 
-const addFriend = (userEmail: string, friendEmail: string) => {
-    const token = getStringFromCookies("auth-token");
-    fetch(`${apiProfilesUrl}/addfriend`, {
-        mode: "cors",
-        method: "POST",
-        body: JSON.stringify({
-            userEmail: userEmail,
-            friendEmail: friendEmail,
-        }),
-        credentials: "same-origin",
-        headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Credentials": "true",
-            "auth-token": token,
-        },
-    })
-        .then((res) => {
-            return res.json();
-        })
-        .then((res) => {
-            if (res.addedFriend === friendEmail) {
-                const button = document.getElementById("button-add-" + friendEmail)!;
-                button.setAttribute("disabled", "true");
-                button.innerText = "Friend Followed";
-            }
-        })
-        .catch((err) => console.log(err));
-};
-
 mainTitle.addEventListener("click", (ev: MouseEvent) => {
     location.reload();
 });
@@ -91,7 +62,8 @@ submitPostButton.addEventListener("click", (ev: MouseEvent) => {
                         return res.json();
                     })
                     .then((res) => {
-                        post.setAttribute("id", `${res.author}-${res.timestamp}`);
+                        // normalizar salida de datos...
+                        post.setAttribute("id", `${res.post.author}-${res.post.timestamp}`);
                         post.innerHTML = formPost(res);
                     })
                     .catch((err) => console.log(err));

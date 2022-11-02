@@ -5,6 +5,8 @@ import { IUser } from "../interfaces";
 import jwt from "jsonwebtoken";
 
 export const postSignUp = async (req: Request, res: Response) => {
+    const exists = await UserModel.findOne({email: req.body.email});
+    if(exists) return res.status(403).json("User already exists");
     // Creando usuario
     const user: IUser = new UserModel({
         username: req.body.username,

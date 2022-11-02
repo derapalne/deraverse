@@ -13,6 +13,8 @@ const avatarUrls = [
     "/img/avatar/house-avatar.png",
     "/img/avatar/mug-avatar.png",
     "/img/avatar/umbrella-avatar.png",
+    "/img/avatar/strawberry-avatar.png",
+    "/img/avatar/smiley-avatar.png",
 ];
 let pfpEditModalOpen = false;
 let pfpEditSelectedAvatar = "";

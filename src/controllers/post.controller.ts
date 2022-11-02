@@ -1,6 +1,16 @@
 import { Request, Response } from "express";
-import { IPost } from "../interfaces";
+import { IComment, IPost } from "../interfaces";
 import { PostModel, UserModel } from "../models";
+import { getCommentsFromPost } from "./comment.controller";
+
+type FullPost = {
+    post: {
+        content: IPost;
+        comments: { comment: IComment; status: number; authorAvatar: string }[];
+    };
+    status: number;
+    authorAvatar: string;
+};
 
 export const postPost = async (req: Request, res: Response) => {
     const author: string = req.body.author;
@@ -25,66 +35,102 @@ export const postPost = async (req: Request, res: Response) => {
 export const getLastPublishedPost = async (req: Request, res: Response) => {
     const authorEmail = req.query.user;
     if (!authorEmail) return res.status(404).json("There has been an error in the request");
-    const lastPost = await PostModel.find({ author: authorEmail }).sort({ timestamp: -1 }).limit(1);
-    const author = await UserModel.findOne({email: authorEmail}, {avatar: 1});
+    const lastPost = await PostModel.findOne({ author: authorEmail }).sort({ timestamp: -1 }).limit(1);
+    const author = await UserModel.findOne({ email: authorEmail }, { avatar: 1 });
     const authorAvatar = author ? author.avatar : "/img/default-avatar.png";
-    lastPost[0].likes.push("0");
-    lastPost[0].dislikes.push("0");
-    res.status(200).json({ post: lastPost[0], status: 0, authorAvatar: authorAvatar });
+    if(!lastPost) return res.status(500).json("Couldnt retrieve post"); 
+    lastPost.likes.push("0");
+    lastPost.dislikes.push("0");
+    const postToSend: FullPost = {
+        post: {
+            content: lastPost,
+            comments: []
+        },
+        status: 0,
+        authorAvatar: authorAvatar
+    }
+    res.status(200).json(postToSend);
 };
 
 const getPostsFromFriendlist = async (
     friendlist: string[],
-    userEmail: string
-): Promise<{ post: IPost; status: number, authorAvatar: string }[]> => {
-    const postsToShow: { post: IPost; status: number, authorAvatar: string }[] = [];
-    for (let f = 0; f < friendlist.length; f++) {
-        const friendPosts = await PostModel.find({ author: friendlist[f] }, { __v: 0 });
-        const friendAvatar = await UserModel.findOne(
-            { email: friendlist[f] },
-            { avatar: 1, _id: 0 }
-        );
-        let authorAvatar = "/img/default-avatar.png";
-        if(friendAvatar) authorAvatar = friendAvatar.avatar;
+    userEmail: string,
+    timestamp: number
+): Promise<FullPost[]> => {
+    // Crear el array donde van a estar los posts
+    const postsToShow: FullPost[] = [];
+    // Por cada item del array de amigos, siempre y cuando sean menos de diez posts
+    let index = 0;
+    const publishedPostsIds: string[] = [];
+    while (index < 10) {
+        // Buscá los posts de cada amigo de la lista
+        const friendPosts = await PostModel.find(
+            { author: { $in: friendlist }, timestamp: { $lt: timestamp } },
+            { __v: 0 }
+        )
+            .sort("-timestamp")
+            .limit(10);
+        if(friendPosts.length == 0) break;
         for (let p = 0; p < friendPosts.length; p++) {
             let status = 0;
             const liked = friendPosts[p].likes.find((user) => user == userEmail);
             const disliked = friendPosts[p].dislikes.find((user) => user == userEmail);
-            if (liked) {
-                status = 1;
-            } else if (disliked) {
+            if (liked) status = 1;
+            else if (disliked) {
                 status = 2;
             }
-            postsToShow.push({ post: friendPosts[p], status: status, authorAvatar: authorAvatar });
+            // Traé su avatar
+            const friendAvatar = await UserModel.findOne(
+                { email: friendPosts[p].author },
+                { avatar: 1, _id: 0 }
+            );
+            let authorAvatar = "/img/default-avatar.png";
+            if (friendAvatar) authorAvatar = friendAvatar.avatar;
+            const comments = await getCommentsFromPost(`${friendPosts[p].author}-${friendPosts[p].timestamp}`, userEmail, Date.now());
+            const wasPublished = publishedPostsIds.find((id: string) => id == friendPosts[p].id);
+            if (wasPublished) {
+                index = 10;
+                continue;
+            } else publishedPostsIds.push(friendPosts[p].id);
+            postsToShow.push({
+                post: { content: friendPosts[p], comments: comments },
+                status: status,
+                authorAvatar: authorAvatar,
+            });
+            index++;
+            if (index >= 10) break;
         }
+        if (index >= 10) break;
     }
     return postsToShow;
 };
 
 export const getAllFriendsPosts = async (req: Request, res: Response) => {
+    const timestamp = req.query.timestamp?.toString();
     const userEmail = req.query.user?.toString();
-    if (!userEmail) return res.status(400).json("There has been an error in the request");
+    if (!userEmail || !timestamp)
+        return res.status(400).json("There has been an error in the request");
     const usersFriendlist = await UserModel.findOne(
         { email: userEmail },
         { friendlist: 1, _id: 0 }
     );
     if (!usersFriendlist) return res.status(400).json("There has been an error in the request");
-    const postsToShow: { post: IPost; status: number }[] = await getPostsFromFriendlist(
+    const postsToShow: FullPost[] = await getPostsFromFriendlist(
         usersFriendlist.friendlist,
-        userEmail
+        userEmail,
+        parseInt(timestamp)
     );
-    postsToShow.sort(
-        (a: { post: IPost; status: number }, b: { post: IPost; status: number }) =>
-            a.post.timestamp - b.post.timestamp
-    );
-    return res.status(200).json(postsToShow);
+    if(postsToShow.length > 0) return res.status(200).json(postsToShow);
+    else return res.status(200).json(false);
 };
 
 export const getUserPosts = async (req: Request, res: Response) => {
     const profileEmail = req.query.profileEmail?.toString();
     const userEmail = req.query.userEmail?.toString();
-    if (!profileEmail || !userEmail) return res.status(401).json("There has been an error in the request");
-    const posts = await getPostsFromFriendlist([profileEmail], userEmail);
+    const timestamp = req.query.timestamp?.toString();
+    if (!profileEmail || !userEmail || !timestamp)
+        return res.status(403).json("There has been an error in the request");
+    const posts: FullPost[] = await getPostsFromFriendlist([profileEmail], userEmail, parseInt(timestamp));
     res.status(200).json(posts);
 };
 

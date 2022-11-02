@@ -3,34 +3,6 @@ const postContentInput = document.getElementById("inputContent");
 const postAuthorInput = document.getElementById("inputAuthor");
 const submitPostButton = document.getElementById("submitPost");
 const friendSuggestions = document.getElementById("friendSuggestions");
-const addFriend = (userEmail, friendEmail) => {
-    const token = getStringFromCookies("auth-token");
-    fetch(`${apiProfilesUrl}/addfriend`, {
-        mode: "cors",
-        method: "POST",
-        body: JSON.stringify({
-            userEmail: userEmail,
-            friendEmail: friendEmail,
-        }),
-        credentials: "same-origin",
-        headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Credentials": "true",
-            "auth-token": token,
-        },
-    })
-        .then((res) => {
-        return res.json();
-    })
-        .then((res) => {
-        if (res.addedFriend === friendEmail) {
-            const button = document.getElementById("button-add-" + friendEmail);
-            button.setAttribute("disabled", "true");
-            button.innerText = "Friend Followed";
-        }
-    })
-        .catch((err) => console.log(err));
-};
 mainTitle.addEventListener("click", (ev) => {
     location.reload();
 });
@@ -88,7 +60,8 @@ submitPostButton.addEventListener("click", (ev) => {
                 return res.json();
             })
                 .then((res) => {
-                post.setAttribute("id", `${res.author}-${res.timestamp}`);
+                // normalizar salida de datos...
+                post.setAttribute("id", `${res.post.author}-${res.post.timestamp}`);
                 post.innerHTML = formPost(res);
             })
                 .catch((err) => console.log(err));

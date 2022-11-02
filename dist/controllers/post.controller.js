@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postUnreactPost = exports.postDislikePost = exports.postLikePost = exports.getUserPosts = exports.getAllFriendsPosts = exports.getLastPublishedPost = exports.postPost = void 0;
 const models_1 = require("../models");
+const comment_controller_1 = require("./comment.controller");
 const postPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const author = req.body.author;
     const content = req.body.content;
@@ -36,57 +37,97 @@ const getLastPublishedPost = (req, res) => __awaiter(void 0, void 0, void 0, fun
     const authorEmail = req.query.user;
     if (!authorEmail)
         return res.status(404).json("There has been an error in the request");
-    const lastPost = yield models_1.PostModel.find({ author: authorEmail }).sort({ timestamp: -1 }).limit(1);
+    const lastPost = yield models_1.PostModel.findOne({ author: authorEmail }).sort({ timestamp: -1 }).limit(1);
     const author = yield models_1.UserModel.findOne({ email: authorEmail }, { avatar: 1 });
     const authorAvatar = author ? author.avatar : "/img/default-avatar.png";
-    lastPost[0].likes.push("0");
-    lastPost[0].dislikes.push("0");
-    res.status(200).json({ post: lastPost[0], status: 0, authorAvatar: authorAvatar });
+    if (!lastPost)
+        return res.status(500).json("Couldnt retrieve post");
+    lastPost.likes.push("0");
+    lastPost.dislikes.push("0");
+    const postToSend = {
+        post: {
+            content: lastPost,
+            comments: []
+        },
+        status: 0,
+        authorAvatar: authorAvatar
+    };
+    res.status(200).json(postToSend);
 });
 exports.getLastPublishedPost = getLastPublishedPost;
-const getPostsFromFriendlist = (friendlist, userEmail) => __awaiter(void 0, void 0, void 0, function* () {
+const getPostsFromFriendlist = (friendlist, userEmail, timestamp) => __awaiter(void 0, void 0, void 0, function* () {
+    // Crear el array donde van a estar los posts
     const postsToShow = [];
-    for (let f = 0; f < friendlist.length; f++) {
-        const friendPosts = yield models_1.PostModel.find({ author: friendlist[f] }, { __v: 0 });
-        const friendAvatar = yield models_1.UserModel.findOne({ email: friendlist[f] }, { avatar: 1, _id: 0 });
-        let authorAvatar = "/img/default-avatar.png";
-        if (friendAvatar)
-            authorAvatar = friendAvatar.avatar;
+    // Por cada item del array de amigos, siempre y cuando sean menos de diez posts
+    let index = 0;
+    const publishedPostsIds = [];
+    while (index < 10) {
+        // Buscá los posts de cada amigo de la lista
+        const friendPosts = yield models_1.PostModel.find({ author: { $in: friendlist }, timestamp: { $lt: timestamp } }, { __v: 0 })
+            .sort("-timestamp")
+            .limit(10);
+        if (friendPosts.length == 0)
+            break;
         for (let p = 0; p < friendPosts.length; p++) {
             let status = 0;
             const liked = friendPosts[p].likes.find((user) => user == userEmail);
             const disliked = friendPosts[p].dislikes.find((user) => user == userEmail);
-            if (liked) {
+            if (liked)
                 status = 1;
-            }
             else if (disliked) {
                 status = 2;
             }
-            postsToShow.push({ post: friendPosts[p], status: status, authorAvatar: authorAvatar });
+            // Traé su avatar
+            const friendAvatar = yield models_1.UserModel.findOne({ email: friendPosts[p].author }, { avatar: 1, _id: 0 });
+            let authorAvatar = "/img/default-avatar.png";
+            if (friendAvatar)
+                authorAvatar = friendAvatar.avatar;
+            const comments = yield (0, comment_controller_1.getCommentsFromPost)(`${friendPosts[p].author}-${friendPosts[p].timestamp}`, userEmail, Date.now());
+            const wasPublished = publishedPostsIds.find((id) => id == friendPosts[p].id);
+            if (wasPublished) {
+                index = 10;
+                continue;
+            }
+            else
+                publishedPostsIds.push(friendPosts[p].id);
+            postsToShow.push({
+                post: { content: friendPosts[p], comments: comments },
+                status: status,
+                authorAvatar: authorAvatar,
+            });
+            index++;
+            if (index >= 10)
+                break;
         }
+        if (index >= 10)
+            break;
     }
     return postsToShow;
 });
 const getAllFriendsPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const userEmail = (_a = req.query.user) === null || _a === void 0 ? void 0 : _a.toString();
-    if (!userEmail)
+    var _a, _b;
+    const timestamp = (_a = req.query.timestamp) === null || _a === void 0 ? void 0 : _a.toString();
+    const userEmail = (_b = req.query.user) === null || _b === void 0 ? void 0 : _b.toString();
+    if (!userEmail || !timestamp)
         return res.status(400).json("There has been an error in the request");
     const usersFriendlist = yield models_1.UserModel.findOne({ email: userEmail }, { friendlist: 1, _id: 0 });
     if (!usersFriendlist)
         return res.status(400).json("There has been an error in the request");
-    const postsToShow = yield getPostsFromFriendlist(usersFriendlist.friendlist, userEmail);
-    postsToShow.sort((a, b) => a.post.timestamp - b.post.timestamp);
-    return res.status(200).json(postsToShow);
+    const postsToShow = yield getPostsFromFriendlist(usersFriendlist.friendlist, userEmail, parseInt(timestamp));
+    if (postsToShow.length > 0)
+        return res.status(200).json(postsToShow);
+    else
+        return res.status(200).json(false);
 });
 exports.getAllFriendsPosts = getAllFriendsPosts;
 const getUserPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b, _c;
-    const profileEmail = (_b = req.query.profileEmail) === null || _b === void 0 ? void 0 : _b.toString();
-    const userEmail = (_c = req.query.userEmail) === null || _c === void 0 ? void 0 : _c.toString();
-    if (!profileEmail || !userEmail)
-        return res.status(401).json("There has been an error in the request");
-    const posts = yield getPostsFromFriendlist([profileEmail], userEmail);
+    var _c, _d, _e;
+    const profileEmail = (_c = req.query.profileEmail) === null || _c === void 0 ? void 0 : _c.toString();
+    const userEmail = (_d = req.query.userEmail) === null || _d === void 0 ? void 0 : _d.toString();
+    const timestamp = (_e = req.query.timestamp) === null || _e === void 0 ? void 0 : _e.toString();
+    if (!profileEmail || !userEmail || !timestamp)
+        return res.status(403).json("There has been an error in the request");
+    const posts = yield getPostsFromFriendlist([profileEmail], userEmail, parseInt(timestamp));
     res.status(200).json(posts);
 });
 exports.getUserPosts = getUserPosts;

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postUnreactPost = exports.postLikePost = exports.postDislikePost = exports.getAllFriendsPosts = exports.getUserPosts = exports.getLastPublishedPost = exports.postPost = exports.postChangeUserAvatar = exports.getUserProfile = exports.postAddFriend = exports.getUsersNotFollowed = exports.getSignUp = exports.getSignIn = exports.getMain = exports.postSignUp = exports.postSignIn = exports.postLogOut = void 0;
+exports.postPostComment = exports.getCommentsFromPost = exports.postUnreactPost = exports.postLikePost = exports.postDislikePost = exports.getAllFriendsPosts = exports.getUserPosts = exports.getLastPublishedPost = exports.postPost = exports.postChangeUserAvatar = exports.getUserProfile = exports.postAddFriend = exports.getUsersNotFollowed = exports.getSignUp = exports.getSignIn = exports.getMain = exports.postSignUp = exports.postSignIn = exports.postLogOut = void 0;
 var auth_controller_1 = require("./auth.controller");
 Object.defineProperty(exports, "postLogOut", { enumerable: true, get: function () { return auth_controller_1.postLogOut; } });
 Object.defineProperty(exports, "postSignIn", { enumerable: true, get: function () { return auth_controller_1.postSignIn; } });
@@ -21,4 +21,7 @@ Object.defineProperty(exports, "getAllFriendsPosts", { enumerable: true, get: fu
 Object.defineProperty(exports, "postDislikePost", { enumerable: true, get: function () { return post_controller_1.postDislikePost; } });
 Object.defineProperty(exports, "postLikePost", { enumerable: true, get: function () { return post_controller_1.postLikePost; } });
 Object.defineProperty(exports, "postUnreactPost", { enumerable: true, get: function () { return post_controller_1.postUnreactPost; } });
+var comment_controller_1 = require("./comment.controller");
+Object.defineProperty(exports, "getCommentsFromPost", { enumerable: true, get: function () { return comment_controller_1.getCommentsFromPost; } });
+Object.defineProperty(exports, "postPostComment", { enumerable: true, get: function () { return comment_controller_1.postPostComment; } });
 //# sourceMappingURL=index.js.map

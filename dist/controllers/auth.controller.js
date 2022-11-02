@@ -16,6 +16,9 @@ exports.postLogOut = exports.postSignIn = exports.postSignUp = void 0;
 const models_1 = require("../models");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const postSignUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const exists = yield models_1.UserModel.findOne({ email: req.body.email });
+    if (exists)
+        return res.status(403).json("User already exists");
     // Creando usuario
     const user = new models_1.UserModel({
         username: req.body.username,
@@ -23,7 +26,7 @@ const postSignUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         password: req.body.password,
         friendlist: [req.body.email],
         followers: [],
-        avatar: "public/img/avatar/default-avatar.png",
+        avatar: "/img/avatar/default-avatar.png",
     });
     user.password = yield user.encryptPassword(user.password);
     // Guardando usuario

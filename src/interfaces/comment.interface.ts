@@ -1,6 +1,6 @@
 import { Document } from "mongoose";
 
-export interface IPost extends Document {
+export interface IComment extends Document {
     author: string;
     username: string;
     content: string;
@@ -8,4 +8,5 @@ export interface IPost extends Document {
     timestamp: number;
     likes: string[];
     dislikes: string[];
+    idFromPost: string;
 }

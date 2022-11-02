@@ -29,21 +29,25 @@
     </div>
     <div class="feed-container">
       <div></div>
-      <div>        <form>
-        <textarea rows="3" cols="50" name="content" id="inputContent" placeholder="Write a post..."></textarea>
-        <input type="hidden" name="author" id="inputAuthor" value=<%= user.email %> />
-        <input type="submit" id="submitPost" value="Post" />
-      </form></div>
+      <div>
+        <form>
+          <textarea rows="3" cols="50" name="content" id="inputContent" placeholder="Write a post..."></textarea>
+          <input type="hidden" name="author" id="inputAuthor" value=<%= user.email %> />
+          <input type="submit" class="submitButton" id="submitPost" value="Post" />
+        </form>
+      </div>
       <div></div>
     </div>
     <div class="feed-container">
       <div class="feed-child">
 
       </div>
-      <div class="feed-child" id="mainFeed">
-        <div>
-          <p>There are no more posts to see.</p>
+      <div class="feed-child" >
+        <div id="mainFeed">
+          
         </div>
+        <button id="getOlderPosts">Get Older Posts</button>
+        <p id="postFooter" style="display: none">There are no more posts to show. Maybe refresh?</p>
       </div>
       <div class="feed-child" id="friendSuggestions">
         <h2>Friend Suggestions</h2>
