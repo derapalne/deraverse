@@ -135,7 +135,7 @@ const formPost = (data: {
         <div id="${post.author}-${post.timestamp}-comments" >${formattedComments}</div>
         <div class="comment-box" id="${post.author}-${post.timestamp}-commentbox">
             <input type="hidden" value="${post.author}-${post.timestamp}" />
-            <textarea rows="3" cols="40" name="content" class="input-comment" placeholder="Write a comment..."></textarea>
+            <textarea rows="3" cols="40" maxlength="188" name="content" class="input-comment" placeholder="Write a comment..."></textarea>
             <input type="submit" id='${post.author}-${
             post.timestamp
         }-comment' class="submitButton" onclick="triggerPostComment('${post.author}-${post.timestamp}')" value="Post" />
