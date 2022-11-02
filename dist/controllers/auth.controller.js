@@ -21,10 +21,10 @@ const postSignUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         return res.status(403).json("User already exists");
     // Creando usuario
     const user = new models_1.UserModel({
-        username: req.body.username,
-        email: req.body.email,
+        username: req.body.username.trim(),
+        email: req.body.email.trim(),
         password: req.body.password,
-        friendlist: [req.body.email],
+        friendlist: [req.body.email.trim()],
         followers: [],
         avatar: "/img/avatar/default-avatar.png",
     });

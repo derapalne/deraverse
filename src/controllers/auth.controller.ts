@@ -9,10 +9,10 @@ export const postSignUp = async (req: Request, res: Response) => {
     if(exists) return res.status(403).json("User already exists");
     // Creando usuario
     const user: IUser = new UserModel({
-        username: req.body.username,
-        email: req.body.email,
+        username: req.body.username.trim(),
+        email: req.body.email.trim(),
         password: req.body.password,
-        friendlist: [req.body.email],
+        friendlist: [req.body.email.trim()],
         followers: [],
         avatar: "/img/avatar/default-avatar.png",
     });

@@ -15,6 +15,9 @@ const avatarUrls = [
     "/img/avatar/umbrella-avatar.png",
     "/img/avatar/strawberry-avatar.png",
     "/img/avatar/smiley-avatar.png",
+    "/img/avatar/cloud-avatar.png",
+    "/img/avatar/mushroom-avatar.png",
+
 ];
 
 let pfpEditModalOpen = false;
