@@ -22,7 +22,7 @@ type CustomComment = {
         timestamp: number;
         likes: string[];
         dislikes: string[];
-        _id: number;
+        id: number;
         idFromPost: string;
     };
     status: number;
@@ -71,7 +71,7 @@ const generateButtonsFromStatus = (
 
 const formComment = (data: CustomComment) => {
     const comment = data.comment;
-    const buttons = generateButtonsFromStatus(data.status, comment.author, comment._id, true);
+    const buttons = generateButtonsFromStatus(data.status, comment.author, comment.id, true);
     const likes = comment.likes[0] == "0" ? "0" : comment.likes.length.toString();
     const dislikes = comment.dislikes[0] == "0" ? "0" : comment.dislikes.length.toString();
     return `<div class="comment">
@@ -87,11 +87,11 @@ const formComment = (data: CustomComment) => {
     </a> 
     <pre class="comment-content">${comment.content}</pre>
     <div>
-      <button class="${buttons.like.class}" id="${comment.author}-${comment._id}-like" onclick="${
+      <button class="${buttons.like.class}" id="${comment.author}-${comment.id}-like" onclick="${
         buttons.like.onclick
     }" >${commentButtonsImages[0]}${likes}</button>
       <button class="${buttons.dislike.class}" id="${comment.author}-${
-        comment._id
+        comment.id
     }-dislike" onclick="${buttons.dislike.onclick}" >${buttons.dislike.image}${dislikes}</button>
     <small class="post-date">${comment.date}</small>
     </div>
